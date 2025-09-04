@@ -9,13 +9,16 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.6",
+    "@types/node": "^24.3.0",
+    "dotenv": "^17.2.2",
     "expo": "~53.0.22",
     "expo-blur": "~14.1.5",
     "expo-constants": "~17.1.7",
@@ -54,7 +57,6 @@
     "typescript": "~5.8.3"
   },
   "private": true,
-
   "jest": {
     "preset": "react-native",
     "testEnvironment": "node",
@@ -71,5 +73,4 @@
       "**/__tests__/**/*.spec.(ts|tsx|js)"
     ]
   }
-
 }
