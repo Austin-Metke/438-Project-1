@@ -1,26 +1,3 @@
-// import { Double } from "react-native/Libraries/Types/CodegenTypes";
-// import { config } from "./config";
-
-// console.log("hello world");
-
-// let requestOptions = {
-//   method: "GET",
-// };
-
-// const getPriceOfDay = async (
-//     ticker: string, 
-//     date: string, 
-//     price: Double
-// ) => {
-//     ticker = ticker.toUpperCase();
-
-//     const params = new URLSearchParams({
-//     api_token: config.stockDataApi,
-//     symbols: ticker,
-//     todaysdate: date
-//   });
-// }
-
 // stockPrice.ts
 // Usage:  npx ts-node stockPrice.ts AAPL
 
