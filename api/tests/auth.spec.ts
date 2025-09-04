@@ -1,4 +1,4 @@
-import { getProfile, login, register, type LoginResp } from "./auth";
+import { getProfile, login, register, type LoginResp } from "../auth";
 
 jest.mock("../client", () => ({
   apiFetch: jest.fn(),
