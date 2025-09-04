@@ -1,10 +1,10 @@
 import { getProfile, login, register, type LoginResp } from "./auth";
 
-jest.mock("./client", () => ({
+jest.mock("../client", () => ({
   apiFetch: jest.fn(),
 }));
 
-import { apiFetch } from "./client";
+import { apiFetch } from "../client";
 
 describe("auth API wrapper", () => {
   beforeEach(() => {
