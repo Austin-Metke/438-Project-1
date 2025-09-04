@@ -37,3 +37,15 @@ yarn-error.*
 *.tsbuildinfo
 
 app-example
+
+# Environment variables
+.env
+
+# IDE files
+.idea/
+
+# Android build files
+android/
+
+# Node modules (if not already there)
+node_modules/
