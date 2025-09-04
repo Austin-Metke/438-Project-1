@@ -69,5 +69,10 @@ describe("getStockHistory", () => {
         getStockHistory("AAPL", "2024-01-01", "2024-01-10")
       ).rejects.toThrow("Network error");
     });
+    it("should handle invalid intervals", async () => {
+      await expect(
+        getStockHistory("AAPL", "2024-01-01", "2024-01-10", "daily") // invalid interval
+      ).rejects.toThrow("Invalid interval type");
+    });
   });
 });

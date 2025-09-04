@@ -7,8 +7,12 @@ let requestOptions = {
 const getStockHistory = async (
   ticker: string,
   startDate: string,
-  endDate: string
+  endDate: string,
+  interval: string = "minute"
 ) => {
+  interval = interval.toLowerCase();
+  ticker = ticker.toUpperCase();
+
   const dateRegex = /^\d{4}\-\d{2}\-\d{2}$/; // regex for yyyy-mm-dd
   if (!(dateRegex.test(startDate) && dateRegex.test(endDate))) {
     throw new Error("Incorrect date format");
@@ -21,13 +25,17 @@ const getStockHistory = async (
     throw new Error("End date cannot be earlier than start date");
   }
 
+  if (!["hour", "minute"].includes(interval)) {
+    throw new Error("Invalid interval type. Must be 'hour' or 'minute'");
+  }
+
   const params = new URLSearchParams({
     api_token: config.stockDataApi,
     symbols: ticker,
     date_from: startDate, // Format: YYYY-MM-DD
     date_to: endDate, // Format: YYYY-MM-DD
     sort: "asc", // Show oldest to newest for progression
-    interval: "hour"
+    interval: interval,
   });
 
   return fetch(
