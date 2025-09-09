@@ -1,5 +1,5 @@
 // stockPrice.ts
-// Usage:  npx ts-node stockPrice.ts AAPL
+// to use while in api folder of this project:  npx ts-node stockPrice.ts "stock ticker"
 
 type QuoteItem = {
   ticker: string;
@@ -9,7 +9,7 @@ type QuoteItem = {
   day_open?: number;
   day_high?: number;
   day_low?: number;
-  date: string;
+  last_trade_time: Date
 };
 
 type QuoteResponse = {
@@ -17,7 +17,7 @@ type QuoteResponse = {
 };
 
 const API_BASE = "https://api.stockdata.org/v1/data/quote";
-const API_TOKEN = "API KEY HERE";
+const API_TOKEN = "A8S7IpasQpaWT9X5VzHl8q309gk6ss8KwhxPh6fN";
 
 export async function getCurrentPrice(
   symbol: string,
@@ -69,12 +69,25 @@ if (process.argv[1] && process.argv[1].endsWith("stockPrice.ts")) {
     try {
       const q = await getCurrentPrice(symbol);
       const currency = q.currency || "USD";
-      console.log(
-        `${q.ticker} (${q.name}) — $${q.price} ${currency}` +
-          (q.day_open != null
-            ? ` | O:${q.day_open} H:${q.day_high} L:${q.day_low}`
-            : "")
-      );
+      const dateStr = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+      console.log(JSON.stringify(q, null, 2));
+      
+      const tradeDate = new Date(q.last_trade_time).toISOString().split("T")[0];
+      const today = new Date().toISOString().split("T")[0];
+
+      if (tradeDate !== today) {
+        console.log(`⚠️ Latest trade is from ${tradeDate}, not today`);
+      } else {
+        console.log(`✅ This is today's trade price: $${q.price}`);
+      }
+      
+      // console.log(
+      //   `${q.ticker} (${q.name}) — $${q.price} ${currency}` +
+      //     (q.day_open != null
+      //       ? ` | O:${q.day_open} H:${q.day_high} L:${q.day_low}`
+      //       : "") +
+      //     ` | ${dateStr}`
+      // );
     } catch (err) {
       console.error(err instanceof Error ? err.message : "Unknown error");
       process.exit(1);
