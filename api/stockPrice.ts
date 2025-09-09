@@ -74,7 +74,8 @@ if (process.argv[1] && process.argv[1].endsWith("stockPrice.ts")) {
       
       const tradeDate = new Date(q.last_trade_time).toISOString().split("T")[0];
       const today = new Date().toISOString().split("T")[0];
-
+      
+      //currently doesnt spit out TODAYS stock price at X time idky
       if (tradeDate !== today) {
         console.log(`⚠️ Latest trade is from ${tradeDate}, not today`);
       } else {
