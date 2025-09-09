@@ -1,5 +1,9 @@
 // stockPrice.ts
 // to use while in api folder of this project:  npx ts-node stockPrice.ts "stock ticker"
+// Senen Bagos, 9/9/25
+// in this file you input a ticker (AAPL, AMZN) and it spits out a json format with the prices
+// there's an issue where I cant get TODAYS stock price, i used a curl to get prices from 09/02/25 to 09/09/25 but the 
+// most recent data was 09/05/25
 
 type QuoteItem = {
   ticker: string;
@@ -20,7 +24,7 @@ const API_BASE = "https://api.stockdata.org/v1/data/quote";
 const API_TOKEN = "A8S7IpasQpaWT9X5VzHl8q309gk6ss8KwhxPh6fN";
 
 export async function getCurrentPrice(
-  symbol: string,
+  symbol: string, //symbol is ticker input like AAPL
   opts: { extendedHours?: boolean } = {}
 ): Promise<QuoteItem> {
   const params = new URLSearchParams({
@@ -72,15 +76,15 @@ if (process.argv[1] && process.argv[1].endsWith("stockPrice.ts")) {
       const dateStr = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
       console.log(JSON.stringify(q, null, 2));
       
-      const tradeDate = new Date(q.last_trade_time).toISOString().split("T")[0];
-      const today = new Date().toISOString().split("T")[0];
+      // const tradeDate = new Date(q.last_trade_time).toISOString().split("T")[0];
+      // const today = new Date().toISOString().split("T")[0];
       
       //currently doesnt spit out TODAYS stock price at X time idky
-      if (tradeDate !== today) {
-        console.log(`⚠️ Latest trade is from ${tradeDate}, not today`);
-      } else {
-        console.log(`✅ This is today's trade price: $${q.price}`);
-      }
+      // if (tradeDate !== today) {
+      //   console.log(`⚠️ Latest trade is from ${tradeDate}, not today`);
+      // } else {
+      //   console.log(`✅ This is today's trade price: $${q.price}`);
+      // }
       
       // console.log(
       //   `${q.ticker} (${q.name}) — $${q.price} ${currency}` +
