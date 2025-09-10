@@ -35,6 +35,7 @@ export default function AccountScreen() {
         {/* Profile Header */}
         <View style={styles.profileHeader}>
           <View style={styles.avatarContainer}>
+            {/* Letter that shows on profile icon */}
             <Text style={styles.avatarText}>
               {mockUser.name
                 ? mockUser.name[0].toUpperCase()
@@ -42,6 +43,7 @@ export default function AccountScreen() {
             </Text>
           </View>
           <View style={styles.userInfo}>
+            {/* Displays user's name and email */}
             <Text style={styles.userName}>{mockUser.name || "Student"}</Text>
             <Text style={styles.userEmail}>{mockUser.email}</Text>
           </View>
@@ -49,6 +51,7 @@ export default function AccountScreen() {
 
         {/* Account Actions */}
         <View style={styles.actionsContainer}>
+          {/* Button to edit profile */}
           <TouchableOpacity
             style={styles.actionButton}
             onPress={handleEditProfile}
@@ -56,7 +59,7 @@ export default function AccountScreen() {
             <Text style={styles.actionText}>Edit Profile</Text>
             <Text style={styles.actionArrow}>›</Text>
           </TouchableOpacity>
-
+          {/* Button for settings */}
           <TouchableOpacity
             style={styles.actionButton}
             onPress={handleSettings}
@@ -66,7 +69,7 @@ export default function AccountScreen() {
           </TouchableOpacity>
 
           <View style={styles.divider} />
-
+          {/* Button to logout */}
           <TouchableOpacity style={styles.actionButton} onPress={handleLogout}>
             <Text style={[styles.actionText, styles.logoutText]}>Logout</Text>
           </TouchableOpacity>
@@ -75,10 +78,12 @@ export default function AccountScreen() {
         {/* Account Info */}
         <View style={styles.infoContainer}>
           <Text style={styles.infoTitle}>Account Information</Text>
+          {/* Account Info (User ID) */}
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>User ID:</Text>
             <Text style={styles.infoValue}>{mockUser.id}</Text>
           </View>
+          {/* Account Info (Email) */}
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Email:</Text>
             <Text style={styles.infoValue}>{mockUser.email}</Text>
