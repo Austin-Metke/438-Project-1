@@ -59,6 +59,7 @@
     "metro-react-native-babel-preset": "^0.77.0",
     "react-test-renderer": "^19.0.0",
     "ts-node": "^10.9.2",
+    "ts-jest": "^29.4.1",
     "typescript": "~5.8.3"
   },
   "private": true,
@@ -90,8 +91,4 @@
     "url": "https://github.com/Austin-Metke/438-Project-1/issues"
   },
   "homepage": "https://github.com/Austin-Metke/438-Project-1#readme"
-    "ts-jest": "^29.4.1",
-    "typescript": "~5.8.3"
-  },
-  "private": true
 }
