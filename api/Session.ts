@@ -6,13 +6,16 @@ export class Session {
     private _id: string;
     private _balance: number;
     profitLoss: number;
-    ticker: string[]
+    ticker: string[];
+    HashMap<String, Number> initialPurchase;
+    HashMap<String, Number> tickerGrossValue;
 
     constructor(id: string, balance: number) {
         this._id = id;
         this._balance = balance
         this.profitLoss = 0;
-        this.ticker = []
+        this.ticker = [];
+        this.initialPurchase = new HashMap<>();
     }
 
     public get balance(): number {
@@ -34,6 +37,40 @@ export class Session {
     public get id(): string {
         return this._id;
     }
+
+    //quanity = 1 by default somehow
+    public  buyStock(String ticker, Int quanity){
+        Number currentPrice = getStockValueOf(ticker);
+        Number totalValue = currentPrice * quanity;
+
+        //TODO if user wants to buy another stock of the same brand check and add
+
+        if(totalValue > this._balance){
+            print("You cant afford it")
+        } else {
+            this.balance - totalValue;
+            this.ticker.append[ticker];
+            this.initialPurchase.put(ticker, totalValue);
+
+            // copy the initial value onto gross for comparison
+            this.tickerGrossValue.copy(this.initialPurchase);
+        }
+    }
+
+    public sellStock(String ticker, Int quanity){
+        
+    }
+
+    public checkProfit(String ticker){
+        Number initValue = this.initialPurchase.get(ticker);
+        Number grossValue = this.tickerGrossValue.get(ticker);
+
+        //maybe need to 64bit it.
+
+        Number profitLossPercentage = (grossValue/initValue) - 1.0;
+    }
+
+
 
 }
 
