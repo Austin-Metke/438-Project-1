@@ -1,13 +1,12 @@
 import { apiFetch } from "./client";
-
 export type LoginResp = {
   token: string;
   user: { id: string; email: string };
 };
 
-//TODO node.js endpoint not created
+//Login
 export async function login(email: string, password: string): Promise<LoginResp> {
-  return apiFetch<LoginResp>("/auth/login", {
+  return apiFetch<LoginResp>("login", {
     method: "POST",
     body: JSON.stringify({ email, password }),
   });
@@ -21,7 +20,20 @@ export async function register(email: string, password: string): Promise<void> {
   });
 }
 
-// TODO node.js endpoint not created
+//Delete user
+export async function deleteAccount(token: string): Promise<void> {
+  return apiFetch<void>("deleteAccount", {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
 export async function getProfile(token: string) {
-  return;
+  return apiFetch<any>("getProfile", {
+    method: "GET",
+    headers: {
+        Authorization: `Bearer ${token}`}
+  });
 }

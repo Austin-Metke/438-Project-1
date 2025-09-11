@@ -1,4 +1,6 @@
-const URL = "https://node.austin-metke.com/api/";
+import { config } from './config';
+
+const URL = config.authApi;
 const TIMEOUT = 10000;
 
 function timeout(ms: number, controller: AbortController) {
