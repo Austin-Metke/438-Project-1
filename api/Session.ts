@@ -40,7 +40,7 @@ export class Session {
 
     //quanity = 1 by default somehow
     public  buyStock(String ticker, Int quanity){
-        Number currentPrice = getStockValueOf(ticker);
+        Number currentPrice = getCurrentPrice(ticker);
         Number totalValue = currentPrice * quanity;
 
         //TODO if user wants to buy another stock of the same brand check and add
@@ -48,7 +48,7 @@ export class Session {
         if(totalValue > this._balance){
             print("You cant afford it")
         } else {
-            this.balance - totalValue;
+            this.balance -= totalValue;
             this.ticker.append[ticker];
             this.initialPurchase.put(ticker, totalValue);
 
@@ -58,7 +58,10 @@ export class Session {
     }
 
     public sellStock(String ticker, Int quanity){
-        
+        // check if quanity matches
+        Number tickerIWannaSell = getCurrentPrice(ticker) * quanity;
+        this.balance += tickerIWannaSell;
+
     }
 
     public checkProfit(String ticker){
