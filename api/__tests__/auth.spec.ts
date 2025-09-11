@@ -1,10 +1,10 @@
-import { getProfile, login, register, type LoginResp } from "./auth";
+import { getProfile, login, register, type LoginResp } from "../auth";
 
-jest.mock("./client", () => ({
+jest.mock("../client", () => ({
   apiFetch: jest.fn(),
 }));
 
-import { apiFetch } from "./client";
+import { apiFetch } from "../client";
 
 describe("auth API wrapper", () => {
   beforeEach(() => {
@@ -45,7 +45,10 @@ describe("auth API wrapper", () => {
       expect(apiFetch).toHaveBeenCalledTimes(1);
       expect(apiFetch).toHaveBeenCalledWith("register", {
         method: "POST",
-        body: JSON.stringify({ email: "email@example.com", password: "password" }),
+        body: JSON.stringify({
+          email: "email@example.com",
+          password: "password",
+        }),
       });
     });
 
