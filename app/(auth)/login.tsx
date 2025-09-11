@@ -24,7 +24,7 @@ export default function Login(){
                 style={styles.input}
                 value= {password}
                 secureTextEntry ={true}
-                onChangeText={username => setPassword(password)}
+                onChangeText={password => setPassword(password)}
                 placeholder='Password' />
             </View>
         </View>
