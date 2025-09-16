@@ -1,21 +1,23 @@
 // Senen Bagos
 // This Class handles making new buy/sell accounts managing your currency, profit/loss dividends xyz
 // A user can have multiple to test out different trading tactics
+import { getCurrentPrice } from "./stockPrice";
 
 export class Session {
     private _id: string;
     private _balance: number;
     profitLoss: number;
-    ticker: string[];
-    HashMap<String, Number> initialPurchase;
-    HashMap<String, Number> tickerGrossValue;
+    tickers: string[]; // this array is to store the tickers weve bought from to have the data, probably a better way to handle it ngl
+    public initialPurchases: Map<string, number>; //this is meant to store the orignal value it was bought at for comparison 
+    public tickerGrossValue: Map<string, number>;
 
     constructor(id: string, balance: number) {
         this._id = id;
         this._balance = balance
         this.profitLoss = 0;
-        this.ticker = [];
-        this.initialPurchase = new HashMap<>();
+        this.tickers = [];
+        this.initialPurchases = new Map<string, number>();
+        this.tickerGrossValue = new Map<string, number>();
     }
 
     public get balance(): number {
@@ -39,42 +41,44 @@ export class Session {
     }
 
     //quanity = 1 by default somehow
-    public  buyStock(String ticker, Int quanity){
-        Number currentPrice = getCurrentPrice(ticker);
-        Number totalValue = currentPrice * quanity;
-
-        //TODO if user wants to buy another stock of the same brand check and add
+    public async buyStock(ticker: string, quantity: number = 1 ): Promise<void>{
+        if(quantity <= 0){
+            console.log("You cant buy 0 or negative stock")
+            return;
+        }
+        
+        const { price } = await getCurrentPrice(ticker); //price is from the quote json thingy this method returns
+        const totalValue = price * quantity;
 
         if(totalValue > this._balance){
-            print("You cant afford it")
+            console.log("You cant afford it")
         } else {
             this.balance -= totalValue;
-            this.ticker.append[ticker];
-            this.initialPurchase.put(ticker, totalValue);
-
-            // copy the initial value onto gross for comparison
-            this.tickerGrossValue.copy(this.initialPurchase);
+            this.tickers.push(ticker);
+            
+            // this checks if we already have some of the same stock, if not it adds 0 to what you bought
+            const prev = this.initialPurchases.get(ticker) ?? 0;
+            this.initialPurchases.set(ticker, prev + totalValue);
         }
     }
 
     public sellStock(String ticker, Int quanity){
+
+        //TODO sell all or sell some nad keep hashmap in check
         // check if quanity matches
-        Number tickerIWannaSell = getCurrentPrice(ticker) * quanity;
+        Number tickerIWannaSell = await getCurrentPrice(ticker) * quanity;
         this.balance += tickerIWannaSell;
 
     }
 
     public checkProfit(String ticker){
-        Number initValue = this.initialPurchase.get(ticker);
+        Number initValue = this.initialPurchases.get(ticker);
         Number grossValue = this.tickerGrossValue.get(ticker);
 
         //maybe need to 64bit it.
 
         Number profitLossPercentage = (grossValue/initValue) - 1.0;
-    }
-
-
-
+    }   
 }
 
 // console.log("Hello")
