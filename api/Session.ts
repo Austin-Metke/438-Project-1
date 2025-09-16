@@ -62,13 +62,23 @@ export class Session {
         }
     }
 
-    public sellStock(String ticker, Int quanity){
+    public async sellStock(ticker: string, quantity: number): Promise<void> {
 
+        //TODO check if i even have the stock in stock
         //TODO sell all or sell some nad keep hashmap in check
+        //TODO if sell some take away from profit
         // check if quanity matches
-        Number tickerIWannaSell = await getCurrentPrice(ticker) * quanity;
-        this.balance += tickerIWannaSell;
+        const { price } = await getCurrentPrice(ticker);
+        const tickerIWannaSell = price * quantity;
+        this._balance += tickerIWannaSell;
 
+        // Number tickerIWannaSell = await getCurrentPrice(ticker) * quanity;
+        // this.balance += tickerIWannaSell;
+    }
+
+    public updateStockPrice(){
+        //just go thru each ticker you have and store current price on to the tickerGrossValue hashMap
+        // line 61 problem with making sure the grossPorfit is correct
     }
 
     public checkProfit(String ticker){
