@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, ActivityIndicator, Alert, StyleSheet } from 'react-native';
+import { ActivityIndicator, Alert, Button, StyleSheet, TextInput, View } from 'react-native';
+// import {createStaticNavigation} from '@react-navigation/native';
+// import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { login } from '@/api/auth';
 import { Octicons } from '@expo/vector-icons';
-import { LoginResp, login } from '@/api/auth';
+import { router } from "expo-router";
+
 
 export default function Login() {
   const [email, setEmailName] = useState('');
@@ -9,18 +13,19 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
 
 
-const handleLogin = async (): Promise<void> => {
+  
+const handleLogin = async (): Promise<boolean> => {
   const e = email.trim();
 
   if (!e || !password) {
     Alert.alert("Missing info", "Please enter both email and password.");
-    return;
+    return false;
   }
 
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
   if (!emailOk) {
     Alert.alert("Invalid email", "Please enter a valid email address.");
-    return;
+    return false;
   }
 
   try {
@@ -29,17 +34,19 @@ const handleLogin = async (): Promise<void> => {
     const data = await login(e, password); // LoginResp
 
     Alert.alert("Welcome", "Logged in successfully!");
-    // navigation.replace("Home");
+    return true;
+    // navigation.replace("Home")
   } catch (err) {
     const msg =
       err instanceof Error ? err.message : "Something went wrong logging in.";
     Alert.alert("Error", msg);
+    return false;
   } finally {
     setIsLoading(false);
   }
 };
 
-
+// const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.formInputWrapper}>
@@ -76,10 +83,18 @@ const handleLogin = async (): Promise<void> => {
         ) : (
           <Button
             title="Log In"
-            onPress={handleLogin}
+            onPress= {async () => {
+
+               if(await (handleLogin())) {
+                //navigate
+                router.replace("/(tabs)/account"); 
+               }
+
+            }}
             color="#841584"
             accessibilityLabel="Log in to your account"
             disabled={!email.trim() || !password}
+            
           />
         )}
       </View>
