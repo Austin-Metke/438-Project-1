@@ -1,57 +1,126 @@
-import { Octicons } from '@expo/vector-icons'
-import React, { useState } from 'react'
-import { StyleSheet, TextInput, View } from 'react-native'
-export default function Login(){
-    const [username, setUserName] = useState('')
-    const [password,setPassword] = useState('')
-    const [isloading, setIsloading] = useState(false)
-    return (
-        <View style={styles.container} >
-        
-            <View style={styles.formInputWrapper}>
-                <Octicons name="person" size = {20} color ="#0005" />
-                <TextInput 
-                cursorColor={'#000'}
-                style={styles.input}
-                value= {username}
-                onChangeText={username => setUserName(username)}
-                placeholder='Username' />
-            </View>
-            <View style={styles.formInputWrapper}>
-                <Octicons name="shield-lock" size = {20} color ="#0005" />
-                <TextInput 
-                cursorColor={'#000'}
-                style={styles.input}
-                value= {password}
-                secureTextEntry ={true}
-                onChangeText={password => setPassword(password)}
-                placeholder='Password' />
-            </View>
-        </View>
-    )
+import React, { useState } from 'react';
+import { View, TextInput, Button, ActivityIndicator, Alert, StyleSheet } from 'react-native';
+import { Octicons } from '@expo/vector-icons';
+import { LoginResp, login } from '@/api/auth';
+
+export default function Login() {
+  const [email, setEmailName] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+
+const handleLogin = async (): Promise<void> => {
+  const e = email.trim();
+
+  if (!e || !password) {
+    Alert.alert("Missing info", "Please enter both email and password.");
+    return;
+  }
+
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+  if (!emailOk) {
+    Alert.alert("Invalid email", "Please enter a valid email address.");
+    return;
+  }
+
+  try {
+    setIsLoading(true);
+
+    const data = await login(e, password); // LoginResp
+
+    Alert.alert("Welcome", "Logged in successfully!");
+    // navigation.replace("Home");
+  } catch (err) {
+    const msg =
+      err instanceof Error ? err.message : "Something went wrong logging in.";
+    Alert.alert("Error", msg);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.formInputWrapper}>
+        <Octicons name="person" size={22} color="#0008" />
+        <TextInput
+          cursorColor="#000"
+          style={styles.input}
+          value={email}
+          onChangeText={setEmailName}
+          autoCapitalize="none"
+          autoCorrect={false}
+          keyboardType="email-address"
+          placeholder="Email"
+          textContentType="username"
+        />
+      </View>
+
+      <View style={styles.formInputWrapper}>
+        <Octicons name="shield-lock" size={22} color="#0008" />
+        <TextInput
+          cursorColor="#000"
+          style={styles.input}
+          value={password}
+          secureTextEntry
+          onChangeText={setPassword}
+          placeholder="Password"
+          textContentType="password"
+        />
+      </View>
+
+      <View style={styles.buttonWrapper}>
+        {isLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <Button
+            title="Log In"
+            onPress={handleLogin}
+            color="#841584"
+            accessibilityLabel="Log in to your account"
+            disabled={!email.trim() || !password}
+          />
+        )}
+      </View>
+    </View>
+  );
 }
 
+
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    formInputWrapper: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: '90%',
-        height: 55,
-        backgroundColor: '#f7f9ef',
-        borderWidth: 1,
-        borderRadius: 6,
-        borderColor: '#000',
-        paddingLeft: 8
-    }, 
-    input: {
-        width: '90%',
-        height: '100%',
-        marginLeft: 10
-    }
+  container: {
+    flex: 1,
+    padding: 24,
+    justifyContent: 'center',
+    alignItems: 'stretch',   // ⬅️ make children take full width
+    alignSelf: 'stretch',    // ⬅️ ensure this screen fills parent width
+    backgroundColor: '#fff',
+  },
+  formInputWrapper: {
+    width: '100%',           // ⬅️ full width rows
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#0002',
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    marginBottom: 16,
+    backgroundColor: '#fff',
+    // If you're on older RN, remove `gap`—it can be quirky on Android:
+    // gap: 8,
+  },
+  input: {
+    flex: 1,
+    fontSize: 18,
+    paddingVertical: 8,
+    minHeight: 48,
+    marginLeft: 8,           // ⬅️ replaces gap for broader support
+  },
+  buttonWrapper: {
+    marginTop: 16,
+    width: '100%',
+    alignSelf: 'stretch',
+  },
 });
