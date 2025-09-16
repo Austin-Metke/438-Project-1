@@ -59,16 +59,9 @@
     "jsdom": "^26.1.0",
     "metro-react-native-babel-preset": "^0.77.0",
     "react-test-renderer": "^19.0.0",
-<<<<<<< HEAD
     "ts-jest": "^29.4.1",
-    "typescript": "~5.8.3"
-  },
-  "private": true
-}
-=======
-    "ts-node": "^10.9.2",
-    "ts-jest": "^29.4.1",
-    "typescript": "~5.8.3"
+    "typescript": "~5.8.3",
+    "ts-node": "^10.9.2"
   },
   "private": true,
   "jest": {
@@ -100,4 +93,3 @@
   },
   "homepage": "https://github.com/Austin-Metke/438-Project-1#readme"
 }
->>>>>>> a84f7f69841b5b93cda0ac8d509c8f6535cfd2c4
