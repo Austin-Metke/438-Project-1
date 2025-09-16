@@ -41,6 +41,7 @@
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
+    "react-native-select-dropdown": "^4.0.1",
     "react-native-web": "~0.20.0",
     "react-native-webview": "13.13.5"
   },
@@ -60,26 +61,10 @@
     "metro-react-native-babel-preset": "^0.77.0",
     "react-test-renderer": "^19.0.0",
     "ts-jest": "^29.4.1",
-    "typescript": "~5.8.3",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "typescript": "~5.8.3"
   },
   "private": true,
-  "jest": {
-    "preset": "react-native",
-    "testEnvironment": "node",
-    "transform": {
-      "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
-    },
-    "transformIgnorePatterns": [
-      "node_modules/(?!(react-native|@react-native|react-native-.*)/)"
-    ],
-    "setupFilesAfterEnv": [
-      "@testing-library/jest-native/extend-expect"
-    ],
-    "testMatch": [
-      "**/__tests__/**/*.spec.(ts|tsx|js)"
-    ]
-  },
   "description": "This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).",
   "repository": {
     "type": "git",

@@ -4,7 +4,7 @@ let requestOptions = {
   method: "GET",
 };
 
-const getStockHistory = async (
+export const getStockHistory = async (
   ticker: string,
   startDate: string,
   endDate: string,
@@ -56,4 +56,6 @@ const getStockHistory = async (
     });
 };
 
-export { getStockHistory };
+export const getStockNames = async () => {
+  
+};
