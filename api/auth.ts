@@ -1,7 +1,8 @@
 import { apiFetch } from "./client";
 export type LoginResp = {
+  message: string;
   token: string;
-  user: { id: string; email: string };
+  user: { userID: number; email: string };
 };
 
 //Login
