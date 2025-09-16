@@ -1,10 +1,11 @@
 import {
+  ScrollView,
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
-  ScrollView,
+  View,
 } from "react-native";
+
 
 export default function AccountScreen() {
   // TODO: Replace with actual user data from authentication context
