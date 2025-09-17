@@ -81,13 +81,18 @@ export class Session {
         // line 61 problem with making sure the grossPorfit is correct
     }
 
-    public checkProfit(String ticker){
-        Number initValue = this.initialPurchases.get(ticker);
-        Number grossValue = this.tickerGrossValue.get(ticker);
+    public checkProfit(ticker: string): number {
+        const initValue = this.initialPurchases.get(ticker);
+        const grossValue = this.tickerGrossValue.get(ticker);
 
-        //maybe need to 64bit it.
+        if (!initValue || !grossValue) {
+        console.log("No records for that ticker");
+        return 0;
+        }
 
-        Number profitLossPercentage = (grossValue/initValue) - 1.0;
+        // maybe need 64-bit: (TypeScript numbers are IEEE-754 doubles)
+        const profitLossPercentage = grossValue / initValue - 1.0;
+        return profitLossPercentage;
     }   
 }
 
