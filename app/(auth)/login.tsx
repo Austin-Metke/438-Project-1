@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { ActivityIndicator, Alert, Button, StyleSheet, TextInput, View } from 'react-native';
+import { ActivityIndicator, Alert, Button, StyleSheet, TextInput, View, Text } from 'react-native';
 // import {createStaticNavigation} from '@react-navigation/native';
 // import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { login } from '@/api/auth';
 import { Octicons } from '@expo/vector-icons';
-import { router } from "expo-router";
-import {saveToken} from '../../api/tokenStorage';
+import { router, Link } from "expo-router";
+import { saveToken } from '../../api/tokenStorage';
 
 export default function Login() {
   const [email, setEmailName] = useState('');
@@ -86,7 +86,17 @@ export default function Login() {
 
           />
         )}
+
+
       </View>
+
+      <View style={styles.footerContainer}>
+        <Text style={styles.text}>Don't have an account?</Text>
+        <Link href="/sign-up" style={styles.link}>
+          Sign up
+        </Link>
+      </View>
+
     </View>
   );
 }
@@ -126,5 +136,19 @@ const styles = StyleSheet.create({
     marginTop: 16,
     width: '100%',
     alignSelf: 'stretch',
+  },
+  text: {
+    fontSize: 16,
+    color: '#444',
+  },
+  link: {
+    fontSize: 16,
+    color: '#007bff',
+    marginLeft: 6,
+  },
+  footerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 24,
   },
 });
