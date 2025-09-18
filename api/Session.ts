@@ -8,10 +8,10 @@ export class Session {
     private _id: string;
     private _balance: number;
     profitLoss: number;
-    tickers: string[]; // this array is to store the tickers weve bought from to have the data, probably a better way to handle it ngl
+    tickers: string[]; // this array is to store the tickers weve bought from to have the data, probably a better way to handle it ngl 9/18, HASHMAPS!!
     public initialPurchases: Map<string, number>; //this is meant to store the orignal value it was bought at for comparison :note: i need to also count the quanity 
     public tickerGrossValue: Map<string, number>;
-    tickerss: Stock[];
+    public tickersss: Map<string, Stock>;
 
     // TODO bought at date
 
@@ -22,8 +22,7 @@ export class Session {
         this.tickers = [];
         this.initialPurchases = new Map<string, number>();
         this.tickerGrossValue = new Map<string, number>();
-
-        this.tickerss = [];
+        this.tickersss = new Map<string, Stock>;
         // make ticker, quantity hashmap??? - will make a stock class to manage it all 
     }
 
@@ -53,24 +52,21 @@ export class Session {
             console.log("You cant buy 0 or negative stock")
             return;
         }
-
-
-        
+        // v  might remove this but it works 
         const { price } = await getCurrentPrice(ticker); //price is from the quote json thingy this method returns
         const totalValue = price * quantity;
 
-        if(totalValue > this._balance){
+        if(totalValue > this._balance){ 
             console.log("You cant afford it")
-        } else {
-
-            const stock = await Stock.create(ticker, quantity);
-            this.tickerss.push(stock);
-            this.balance -= totalValue;
-            this.tickers.push(ticker);
-            
-            // this checks if we already have some of the same stock, if not it adds 0 to what you bought
+        } else if (this.tickersss.has(ticker)){ //if stock is already in users account add to it 
             const prev = this.initialPurchases.get(ticker) ?? 0;
             this.initialPurchases.set(ticker, prev + totalValue);
+        } else { //buy and set the stock
+
+            const stock = await Stock.create(ticker, quantity);            
+            this.balance -= totalValue;
+            this.tickersss.set(ticker, stock);
+
         }
     }
 

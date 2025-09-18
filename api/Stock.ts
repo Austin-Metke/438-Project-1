@@ -35,18 +35,24 @@ export class Stock {
     public get initialPricePerShare(): number {
         return this._initialTotalValue / this._quantity;
     }
-
+    
     public get currentPricePerShare(): number {
         return this._currentGrossValue / this._quantity;
     }
 
     // PnL is profit/loss
+    // this method returns total value in dollars
     public get unrealizedPnL(): number {
         return this._currentGrossValue - this._initialTotalValue;
     }
 
+    //this returns total value in a percent
     public get unrealizedPnLPercent(): number {
         if (this._initialTotalValue === 0) return 0;
         return (this.unrealizedPnL / this._initialTotalValue) * 100;
+    }
+
+    public get ticker(): string {
+        return this._ticker;
     }
 }
