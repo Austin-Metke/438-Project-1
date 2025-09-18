@@ -8,3 +8,5 @@ import { getCurrentPrice } from "./stockPrice";
     console.error("Error fetching stock:", err);
   }
 })();
+
+//ignopre this file

@@ -8,8 +8,10 @@ export class Session {
     private _balance: number;
     profitLoss: number;
     tickers: string[]; // this array is to store the tickers weve bought from to have the data, probably a better way to handle it ngl
-    public initialPurchases: Map<string, number>; //this is meant to store the orignal value it was bought at for comparison 
+    public initialPurchases: Map<string, number>; //this is meant to store the orignal value it was bought at for comparison :note: i need to also count the quanity 
     public tickerGrossValue: Map<string, number>;
+
+    // TODO bought at date
 
     constructor(id: string, balance: number) {
         this._id = id;
@@ -18,6 +20,7 @@ export class Session {
         this.tickers = [];
         this.initialPurchases = new Map<string, number>();
         this.tickerGrossValue = new Map<string, number>();
+        // make ticker, quantity hashmap???
     }
 
     public get balance(): number {
@@ -65,7 +68,7 @@ export class Session {
     public async sellStock(ticker: string, quantity: number): Promise<void> {
 
         //TODO check if i even have the stock in stock
-        //TODO sell all or sell some nad keep hashmap in check
+        //TODO sell all or sell some and keep hashmap in check
         //TODO if sell some take away from profit
         // check if quanity matches
         const { price } = await getCurrentPrice(ticker);
@@ -77,7 +80,8 @@ export class Session {
     }
 
     public updateStockPrice(){
-        //just go thru each ticker you have and store current price on to the tickerGrossValue hashMap
+        //just go thru each ticker you have and store current price from the api on to the tickerGrossValue hashMap
+        // now that i think about it i should just make a stock class that holds all the relevant data...
         // line 61 problem with making sure the grossPorfit is correct
     }
 
