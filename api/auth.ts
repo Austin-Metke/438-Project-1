@@ -5,6 +5,24 @@ export type LoginResp = {
   user: { userID: number; email: string };
 };
 
+export type UserProfile = {
+  id: string;
+  email: string;
+  name?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+};
+
+type RawProfileResp = {
+  profile: {
+    userID: number;
+    email: string;
+    firstName?: string | null;
+    lastName?: string | null;
+
+  };
+};
+
 //Login
 export async function login(email: string, password: string): Promise<LoginResp> {
   return apiFetch<LoginResp>("login", {
@@ -31,10 +49,18 @@ export async function deleteAccount(token: string): Promise<void> {
   });
 }
 
-export async function getProfile(token: string) {
-  return apiFetch<any>("getProfile", {
+export async function getProfile(token: string): Promise<UserProfile> {
+  const data = await apiFetch<RawProfileResp>("getProfile", {
     method: "GET",
-    headers: {
-        Authorization: `Bearer ${token}`}
+    headers: { Authorization: `Bearer ${token}` },
   });
+
+  const p = data.profile;
+  return {
+    id: String(p.userID),      // map userID -> id (string)
+    email: p.email,
+    firstName: p.firstName ?? null,
+    lastName: p.lastName ?? null,
+
+  };
 }
