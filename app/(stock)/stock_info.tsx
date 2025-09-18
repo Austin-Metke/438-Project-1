@@ -7,6 +7,7 @@ export default function StockInfoScreen() {
   const router = useRouter();
   const [stockData, setStockData] = useState();
 
+  // Fetches stock data passed in through our index file
   useEffect(() => {
     if (params.stockData) {
       try {
@@ -18,6 +19,7 @@ export default function StockInfoScreen() {
     }
   }, [params.stockData]);
 
+  // Renders stock information onto the info screen.
   const renderStockInfo = () => {
     if (!stockData || !stockData.data || stockData.data.length === 0) {
       return <Text style={styles.noDataText}>No stock data available</Text>;
@@ -30,6 +32,7 @@ export default function StockInfoScreen() {
         <Text style={styles.stockSymbol}>{stock.symbol}</Text>
         <Text style={styles.stockName}>{stock.name || "Company Name"}</Text>
 
+        {/* Adds stock information onto the screen */}
         {stock.price && <Text style={styles.stockPrice}>${stock.price}</Text>}
 
         {stock.change && (
