@@ -5,7 +5,7 @@ import { ActivityIndicator, Alert, Button, StyleSheet, TextInput, View } from 'r
 import { login } from '@/api/auth';
 import { Octicons } from '@expo/vector-icons';
 import { router } from "expo-router";
-
+import {saveToken} from '../../api/tokenStorage';
 
 export default function Login() {
   const [email, setEmailName] = useState('');
@@ -13,40 +13,36 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
 
 
-  
-const handleLogin = async (): Promise<boolean> => {
-  const e = email.trim();
 
-  if (!e || !password) {
-    Alert.alert("Missing info", "Please enter both email and password.");
-    return false;
-  }
+  const handleLogin = async (): Promise<void> => {
+    const e = email.trim();
 
-  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
-  if (!emailOk) {
-    Alert.alert("Invalid email", "Please enter a valid email address.");
-    return false;
-  }
+    if (!e || !password) {
+      Alert.alert("Missing info", "Please enter both email and password.");
+    }
 
-  try {
-    setIsLoading(true);
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+    if (!emailOk) {
+      Alert.alert("Invalid email", "Please enter a valid email address.");
+    }
 
-    const data = await login(e, password); // LoginResp
+    try {
+      setIsLoading(true);
 
-    Alert.alert("Welcome", "Logged in successfully!");
-    return true;
-    // navigation.replace("Home")
-  } catch (err) {
-    const msg =
-      err instanceof Error ? err.message : "Something went wrong logging in.";
-    Alert.alert("Error", msg);
-    return false;
-  } finally {
-    setIsLoading(false);
-  }
-};
+      const data = await login(e, password); // LoginResp
+      await saveToken(data.token);
+      Alert.alert("Welcome", "Logged in successfully!");
+      router.replace("/(tabs)/account");
+    } catch (err) {
+      const msg =
+        err instanceof Error ? err.message : "Something went wrong logging in.";
+      Alert.alert("Error", msg);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-// const navigation = useNavigation();
+  // const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.formInputWrapper}>
@@ -83,18 +79,11 @@ const handleLogin = async (): Promise<boolean> => {
         ) : (
           <Button
             title="Log In"
-            onPress= {async () => {
-
-               if(await (handleLogin())) {
-                //navigate
-                router.replace("/(tabs)/account"); 
-               }
-
-            }}
+            onPress={handleLogin}
             color="#841584"
             accessibilityLabel="Log in to your account"
             disabled={!email.trim() || !password}
-            
+
           />
         )}
       </View>

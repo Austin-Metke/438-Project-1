@@ -5,15 +5,22 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { deleteToken, getToken } from "@/api/tokenStorage";
+import { router } from "expo-router";
+import { getProfile } from "@/api/auth";
 
+export default async function AccountScreen() {
 
-export default function AccountScreen() {
   // TODO: Replace with actual user data from authentication context
-  const mockUser = {
-    id: "Admin",
-    email: "admin@google.com",
-    name: "Admin",
-  };
+//   const userProfile = {
+//     id: "Admin",
+//     email: "admin@google.com",
+//     name: "Admin",
+//   };
+
+  const userToken = await getToken() ?? "";
+  
+  const userProfile = await getProfile(userToken);
 
   const handleEditProfile = () => {
     // TODO: Navigate to edit profile screen
@@ -26,8 +33,8 @@ export default function AccountScreen() {
   };
 
   const handleLogout = () => {
-    // TODO: Implement logout functionality
-    console.log("Logout pressed");
+    deleteToken();
+    router.replace("/(auth)/login");
   };
 
   return (
@@ -38,15 +45,15 @@ export default function AccountScreen() {
           <View style={styles.avatarContainer}>
             {/* Letter that shows on profile icon */}
             <Text style={styles.avatarText}>
-              {mockUser.name
-                ? mockUser.name[0].toUpperCase()
-                : mockUser.email[0].toUpperCase()}
+              {userProfile.name
+                ? userProfile.name[0].toUpperCase()
+                : userProfile.email[0].toUpperCase()}
             </Text>
           </View>
           <View style={styles.userInfo}>
             {/* Displays user's name and email */}
-            <Text style={styles.userName}>{mockUser.name || "Student"}</Text>
-            <Text style={styles.userEmail}>{mockUser.email}</Text>
+            <Text style={styles.userName}>{userProfile.name || "Student"}</Text>
+            <Text style={styles.userEmail}>{userProfile.email}</Text>
           </View>
         </View>
 
@@ -82,12 +89,12 @@ export default function AccountScreen() {
           {/* Account Info (User ID) */}
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>User ID:</Text>
-            <Text style={styles.infoValue}>{mockUser.id}</Text>
+            <Text style={styles.infoValue}>{userProfile.userID}</Text>
           </View>
           {/* Account Info (Email) */}
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Email:</Text>
-            <Text style={styles.infoValue}>{mockUser.email}</Text>
+            <Text style={styles.infoValue}>{userProfile.email}</Text>
           </View>
         </View>
       </View>
