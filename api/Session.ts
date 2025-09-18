@@ -1,6 +1,7 @@
 // Senen Bagos
 // This Class handles making new buy/sell accounts managing your currency, profit/loss dividends xyz
 // A user can have multiple to test out different trading tactics
+import { Stock } from "./Stock";
 import { getCurrentPrice } from "./stockPrice";
 
 export class Session {
@@ -10,6 +11,7 @@ export class Session {
     tickers: string[]; // this array is to store the tickers weve bought from to have the data, probably a better way to handle it ngl
     public initialPurchases: Map<string, number>; //this is meant to store the orignal value it was bought at for comparison :note: i need to also count the quanity 
     public tickerGrossValue: Map<string, number>;
+    tickerss: Stock[];
 
     // TODO bought at date
 
@@ -20,6 +22,8 @@ export class Session {
         this.tickers = [];
         this.initialPurchases = new Map<string, number>();
         this.tickerGrossValue = new Map<string, number>();
+
+        this.tickerss = [];
         // make ticker, quantity hashmap??? - will make a stock class to manage it all 
     }
 
@@ -49,6 +53,8 @@ export class Session {
             console.log("You cant buy 0 or negative stock")
             return;
         }
+
+
         
         const { price } = await getCurrentPrice(ticker); //price is from the quote json thingy this method returns
         const totalValue = price * quantity;
@@ -56,6 +62,9 @@ export class Session {
         if(totalValue > this._balance){
             console.log("You cant afford it")
         } else {
+
+            const stock = await Stock.create(ticker, quantity);
+            this.tickerss.push(stock);
             this.balance -= totalValue;
             this.tickers.push(ticker);
             
@@ -66,7 +75,6 @@ export class Session {
     }
 
     public async sellStock(ticker: string, quantity: number): Promise<void> {
-
         //TODO check if i even have the stock in stock
         //TODO sell all or sell some and keep hashmap in check
         //TODO if sell some take away from profit
