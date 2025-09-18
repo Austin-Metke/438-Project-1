@@ -60,7 +60,16 @@ export class Stock {
         return this._initialTotalValue;
     }
 
-    public setInitialTotalValue(newStock:number){
+    public addInitialTotalValue(newStock:number){
         this._initialTotalValue += newStock;
     }
+
+    public getQuantity():number{
+        return this._quantity;
+    }
+
+    public addQuantity(newPurchase:number){
+        this._quantity += newPurchase;
+    }
+
 }

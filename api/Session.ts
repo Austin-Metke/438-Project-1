@@ -57,8 +57,8 @@ export class Session {
 
         } else if (this.stocks.has(ticker)){ //if stock is already in users account add to it 
             
-            this.stocks.get(ticker)?.setInitialTotalValue(totalValue);// ? is to see if it exists even tho i did the check, maybe can make the code better later
-
+            this.stocks.get(ticker)?.addToInitialTotalValue(totalValue);// ? is to see if it exists even tho i did the check, maybe can make the code better later
+            
         } else { //buy and set the stock to the hashmap
             const stock = await Stock.create(ticker, quantity);            
             this.balance -= totalValue;
@@ -88,6 +88,8 @@ export class Session {
     public checkProfit(ticker: string): number {
         const initValue = this.initialPurchases.get(ticker);
         const grossValue = this.tickerGrossValue.get(ticker);
+
+        this.stocks.get(ticker)
 
         if (!initValue || !grossValue) {
         console.log("No records for that ticker");
