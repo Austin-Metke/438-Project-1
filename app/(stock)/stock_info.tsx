@@ -2,30 +2,40 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
+interface StockData {
+  data?: Array<{
+    symbol?: string;
+    name?: string;
+    price?: number;
+    change?: number;
+    exchange?: string;
+    currency?: string;
+  }>;
+}
+
 export default function StockInfoScreen() {
   const params = useLocalSearchParams();
   const router = useRouter();
-  const [stockData, setStockData] = useState();
+  const [stockData, setStockData] = useState<StockData | null>(null); // Add proper typing
 
-  // Fetches stock data passed in through our index file
   useEffect(() => {
     if (params.stockData) {
       try {
         const parsedData = JSON.parse(params.stockData as string);
         setStockData(parsedData);
       } catch (error) {
-        console.log(`Error parsing stock data.`);
+        console.error("Error parsing stock data:", error);
       }
     }
   }, [params.stockData]);
 
-  // Renders stock information onto the info screen.
   const renderStockInfo = () => {
     if (!stockData || !stockData.data || stockData.data.length === 0) {
       return <Text style={styles.noDataText}>No stock data available</Text>;
     }
 
-    const stock = stockData.data[0]; // Get first stock result
+    const stock = stockData.data[0];
+    // Get first stock result
 
     return (
       <View style={styles.stockCard}>
