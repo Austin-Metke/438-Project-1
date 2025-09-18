@@ -20,7 +20,7 @@ export class Session {
         this.tickers = [];
         this.initialPurchases = new Map<string, number>();
         this.tickerGrossValue = new Map<string, number>();
-        // make ticker, quantity hashmap???
+        // make ticker, quantity hashmap??? - will make a stock class to manage it all 
     }
 
     public get balance(): number {
