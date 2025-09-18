@@ -1,4 +1,4 @@
-import { getStockHistory } from "../stock-data";
+import { getStockHistory } from "../stockData";
 
 // Mock fetch globally
 global.fetch = jest.fn();

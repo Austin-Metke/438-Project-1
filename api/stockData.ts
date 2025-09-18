@@ -1,10 +1,11 @@
 import { config } from "./config";
+import { useState, useEffect } from "react";
 
 let requestOptions = {
   method: "GET",
 };
 
-const getStockHistory = async (
+export const getStockHistory = async (
   ticker: string,
   startDate: string,
   endDate: string,
@@ -56,4 +57,35 @@ const getStockHistory = async (
     });
 };
 
-export { getStockHistory };
+// Fixed searchForTick function
+export const searchForTick = async (ticker: string) => {
+  const params = new URLSearchParams({
+    api_token: config.stockDataApi,
+    symbols: ticker,
+  });
+
+  try {
+    const response = await fetch(
+      `https://api.stockdata.org/v1/entity/search?${params}`,
+      requestOptions
+    );
+
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.status} ${response.statusText}`);
+    }
+
+    const result = await response.json();
+
+    // Check if any results were found
+    if (result.data && result.data.length > 0) {
+      return result; // Stock found
+    } else {
+      return null; // Stock not found
+    }
+  } catch (error) {
+    if (error instanceof TypeError) {
+      throw new Error("Network error: Unable to search for stock");
+    }
+    throw error;
+  }
+};
