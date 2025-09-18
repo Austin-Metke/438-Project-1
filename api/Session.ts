@@ -9,9 +9,7 @@ export class Session {
     private _balance: number;
     profitLoss: number;
     tickers: string[]; // this array is to store the tickers weve bought from to have the data, probably a better way to handle it ngl 9/18, HASHMAPS!!
-    public initialPurchases: Map<string, number>; //this is meant to store the orignal value it was bought at for comparison :note: i need to also count the quanity 
-    public tickerGrossValue: Map<string, number>;
-    public tickersss: Map<string, Stock>;
+    public stocks: Map<string, Stock>;
 
     // TODO bought at date
 
@@ -20,9 +18,7 @@ export class Session {
         this._balance = balance
         this.profitLoss = 0;
         this.tickers = [];
-        this.initialPurchases = new Map<string, number>();
-        this.tickerGrossValue = new Map<string, number>();
-        this.tickersss = new Map<string, Stock>;
+        this.stocks = new Map<string, Stock>;
         // make ticker, quantity hashmap??? - will make a stock class to manage it all 
     }
 
@@ -57,16 +53,16 @@ export class Session {
         const totalValue = price * quantity;
 
         if(totalValue > this._balance){ 
-            console.log("You cant afford it")
-        } else if (this.tickersss.has(ticker)){ //if stock is already in users account add to it 
-            const prev = this.initialPurchases.get(ticker) ?? 0;
-            this.initialPurchases.set(ticker, prev + totalValue);
-        } else { //buy and set the stock
+            console.log("You cant afford it");
 
+        } else if (this.stocks.has(ticker)){ //if stock is already in users account add to it 
+            
+            this.stocks.get(ticker)?.setInitialTotalValue(totalValue);// ? is to see if it exists even tho i did the check, maybe can make the code better later
+
+        } else { //buy and set the stock to the hashmap
             const stock = await Stock.create(ticker, quantity);            
             this.balance -= totalValue;
-            this.tickersss.set(ticker, stock);
-
+            this.stocks.set(ticker, stock); // sets hashmap with stock ("AAPL", aapl object)
         }
     }
 

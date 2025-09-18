@@ -55,4 +55,12 @@ export class Stock {
     public get ticker(): string {
         return this._ticker;
     }
+
+    public get initialTotalValue():number{
+        return this._initialTotalValue;
+    }
+
+    public setInitialTotalValue(newStock:number){
+        this._initialTotalValue += newStock;
+    }
 }
