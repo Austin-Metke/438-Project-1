@@ -1,4 +1,10 @@
-import { login, register, deleteAccount, getProfile, type LoginResp } from "../auth";
+import {
+  login,
+  register,
+  deleteAccount,
+  getProfile,
+  type LoginResp,
+} from "../auth";
 
 jest.mock("../client", () => ({
   apiFetch: jest.fn(),
@@ -14,8 +20,9 @@ describe("auth API wrapper", () => {
   describe("login", () => {
     it("calls login with correct method/body and returns parsed response", async () => {
       const mockResp: LoginResp = {
+        message: "test",
         token: "jwt-123",
-        user: { id: "u1", email: "a@example.com" },
+        user: { userID: 1, email: "a@example.com" },
       };
       (apiFetch as jest.Mock).mockResolvedValueOnce(mockResp);
 
