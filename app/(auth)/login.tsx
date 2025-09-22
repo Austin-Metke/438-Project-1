@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { ActivityIndicator, Alert, Button, StyleSheet, TextInput, View, Text, Image, Pressable, GestureResponderEvent } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 // import {createStaticNavigation} from '@react-navigation/native';
 // import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { login } from '@/api/auth';
 import { Octicons } from '@expo/vector-icons';
-import { router, Link } from "expo-router";
+import { Link, router } from "expo-router";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { saveToken } from '../../api/tokenStorage';
 import AppLogo from '../components/appLogo';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import PrimaryButton from '../components/PrimaryButton';
 
 export default function Login() {
@@ -96,7 +96,7 @@ export default function Login() {
         <PrimaryButton title={'Login'} onPress={handleLogin} disabled={!canSubmit}/>
 
         <View style={styles.footerContainer}>
-          <Text style={styles.text}>Don't have an account?</Text>
+          <Text style={styles.text}>Don&apos;t have an account?</Text>
           <Link href="/sign-up" style={styles.link}>
             Sign up
           </Link>
