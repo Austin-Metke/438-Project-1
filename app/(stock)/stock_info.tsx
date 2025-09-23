@@ -1,6 +1,7 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { StockGraph } from "@/api/stockGraph";
 
 interface StockData {
   data?: Array<{
@@ -29,15 +30,11 @@ export default function StockInfoScreen() {
     }
   }, [params.stockData]);
 
-  const generateGraph = () => {
-    if (!stockData || !stockData.data || stockData.data.length === 0) {
-      return <Text style={styles.noDataText}>No stock data available</Text>;
-    }
-  };
-
   const renderStockInfo = () => {
     if (!stockData || !stockData.data || stockData.data.length === 0) {
       return <Text style={styles.noDataText}>No stock data available</Text>;
+
+      return StockGraph;
     }
 
     const stock = stockData.data[0];
@@ -45,11 +42,12 @@ export default function StockInfoScreen() {
 
     return (
       <View style={styles.stockCard}>
-        <Text style={styles.stockSymbol}>{stock.symbol}</Text>
-        <Text style={styles.stockName}>{stock.name || "Company Name"}</Text>
+        <Text style={styles.stockSymbol}>{stock.ticker}</Text>
 
         {/* Adds stock information onto the screen */}
-        {stock.price && <Text style={styles.stockPrice}>${stock.price}</Text>}
+        {stock.data && (
+          <Text style={styles.stockPrice}>Open: ${stock.data.open}</Text>
+        )}
 
         {stock.change && (
           <Text
@@ -64,13 +62,13 @@ export default function StockInfoScreen() {
         )}
 
         <View style={styles.detailsContainer}>
-          <Text style={styles.detailLabel}>Exchange:</Text>
-          <Text style={styles.detailValue}>{stock.exchange || "N/A"}</Text>
+          <Text style={styles.detailLabel}>Low:</Text>
+          <Text style={styles.detailValue}>{stock.data.low || "N/A"}</Text>
         </View>
 
         <View style={styles.detailsContainer}>
-          <Text style={styles.detailLabel}>Currency:</Text>
-          <Text style={styles.detailValue}>{stock.currency || "USD"}</Text>
+          <Text style={styles.detailLabel}>High:</Text>
+          <Text style={styles.detailValue}>{stock.data.high || "USD"}</Text>
         </View>
       </View>
     );
@@ -79,11 +77,14 @@ export default function StockInfoScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.symbol}>{params.symbol}</Text>
+        <Text style={styles.symbol}>Stock Data & Graph</Text>
       </View>
 
       <View style={styles.content}>
         {renderStockInfo()}
+        {params.symbol && (
+          <StockGraph symbol={params.symbol as string} data={stockData?.data} />
+        )}
 
         {/* Debug section - remove in production
         <View style={styles.debugSection}>
