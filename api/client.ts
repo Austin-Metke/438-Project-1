@@ -8,34 +8,54 @@ function timeout(ms: number, controller: AbortController) {
 export async function apiFetch<T>(
   path: string,
   options: RequestInit = {},
-  timeoutMs = TIMEOUT
+  timeoutMs = TIMEOUT,
+  okStatuses: number[] = []        // <— new
 ): Promise<T> {
-  //To prevent hanging incase of network issues, we use a timeout
   const controller = new AbortController();
   const id = timeout(timeoutMs, controller);
-  try {
 
-    // `path` being the endpoint we want from our server
+  try {
     const res = await fetch(`${URL}${path}`, {
       ...options,
       headers: {
+        Accept: "application/json",
         "Content-Type": "application/json",
         ...(options.headers || {}),
       },
+      redirect: "follow",
       signal: controller.signal,
     });
 
-    const text = await res.text();
-    const data = text ? JSON.parse(text) : null;
+    const ct = res.headers.get("content-type") || "";
+    const raw = await res.text();
+    const isJson = ct.includes("application/json");
+    let data: unknown = null;
 
-    //Error handling
-    if (!res.ok) {
-      const message = data?.error || data?.message || `HTTP ${res.status}`;
-      throw new Error(message);
+    if (isJson && raw) {
+      try {
+        data = JSON.parse(raw);
+      } catch {
+        console.log("JSON parse failed. CT:", ct, "Status:", res.status, "Body head:", raw.slice(0, 200));
+        throw new Error("Server returned invalid JSON.");
+      }
     }
+
+    // ✅ only throw if it's not ok and not whitelisted
+    if (!res.ok && !okStatuses.includes(res.status)) {
+      const msg =
+        (isJson && (data as any)?.error) ||
+        (isJson && (data as any)?.message) ||
+        `HTTP ${res.status} ${res.statusText} — ${raw.slice(0, 200)}`;
+      throw new Error(msg);
+    }
+
+    if (!isJson) {
+      console.log("Non-JSON response", { status: res.status, ct, bodyStart: raw.slice(0, 200) });
+      throw new Error(`Expected JSON but got "${ct || "unknown"}": ${raw.slice(0, 200)}`);
+    }
+
     return data as T;
   } finally {
-    //cancel timeout
     clearTimeout(id);
   }
 }

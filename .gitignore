@@ -49,3 +49,4 @@ android/
 
 # Node modules (if not already there)
 node_modules/
+api/example.ts

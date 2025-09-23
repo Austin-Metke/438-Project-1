@@ -1,14 +1,22 @@
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, View } from "react-native";
+import Login from "./(auth)/login";
 import { Stack } from "expo-router";
 
 export default function RootLayout() {
-  return ( 
-    <Stack>   
-      <Stack.Screen name="login" options={{ title: 'Login' }} />
-      <Stack.Screen name="main" options={{ title: 'Home' }} />
-      <Stack.Screen name="about" options={{ title: 'About' }} /> 
-      <Stack.Screen name="port" options={{ title: 'Port' }} /> 
+  return (
+    <Stack initialRouteName="(auth)" screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
     </Stack>
+    // <Stack>
+    //   <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    //   <Stack.Screen
+    //     name="(stock)"
+    //     options={{
+    //       headerShown: false, // This will hide the "(stock)" header
+    //     }}
+    //   />
+    // </Stack>
   );
 }
-
-
