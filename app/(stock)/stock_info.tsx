@@ -29,6 +29,12 @@ export default function StockInfoScreen() {
     }
   }, [params.stockData]);
 
+  const generateGraph = () => {
+    if (!stockData || !stockData.data || stockData.data.length === 0) {
+      return <Text style={styles.noDataText}>No stock data available</Text>;
+    }
+  };
+
   const renderStockInfo = () => {
     if (!stockData || !stockData.data || stockData.data.length === 0) {
       return <Text style={styles.noDataText}>No stock data available</Text>;
@@ -73,20 +79,19 @@ export default function StockInfoScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Stock Information</Text>
+        <Text style={styles.symbol}>{params.symbol}</Text>
       </View>
 
       <View style={styles.content}>
-        <Text style={styles.symbol}>{params.symbol}</Text>
         {renderStockInfo()}
 
-        {/* Debug section - remove in production */}
+        {/* Debug section - remove in production
         <View style={styles.debugSection}>
           <Text style={styles.debugTitle}>Raw Data (Debug):</Text>
           <Text style={styles.debugText}>
             {stockData ? JSON.stringify(stockData, null, 2) : "No data"}
           </Text>
-        </View>
+        </View> */}
       </View>
     </ScrollView>
   );
@@ -100,6 +105,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     paddingTop: 50,
     paddingHorizontal: 20,
     paddingBottom: 20,

@@ -1,4 +1,4 @@
-import { searchForTick } from "@/api/stockData";
+import { getStockHistory, searchForTick } from "@/api/stockData";
 import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
@@ -29,8 +29,7 @@ export default function Index() {
     setStockData(null); // Clear previous stock data
 
     try {
-      const result = await searchForTick(search.toLowerCase());
-      console.log("Stock search result:", result);
+      const result = await getStockHistory(search.toLowerCase());
 
       if (result && result.data && result.data.length > 0) {
         // Stock found - display the data

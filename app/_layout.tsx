@@ -9,14 +9,5 @@ export default function RootLayout() {
       <Stack.Screen name="(auth)" options={{ headerShown: false }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
     </Stack>
-    // <Stack>
-    //   <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    //   <Stack.Screen
-    //     name="(stock)"
-    //     options={{
-    //       headerShown: false, // This will hide the "(stock)" header
-    //     }}
-    //   />
-    // </Stack>
   );
 }
