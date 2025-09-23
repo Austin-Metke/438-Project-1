@@ -32,10 +32,10 @@ export async function login(email: string, password: string): Promise<LoginResp>
 }
 
 // Register user
-export async function register(email: string, password: string): Promise<void> {
-  return apiFetch<void>("register", {
+export async function register(firstName: string, lastName: string, email: string, password: string): Promise<any> {
+  return apiFetch<any>("register", {
     method: "POST",
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({firstName, lastName, email, password }),
   });
 }
 
