@@ -7,20 +7,72 @@ import { getCurrentPrice } from "./stockPrice";
 export class Session {
     private _id: string;
     private _balance: number;
-    profitLoss: number;
-    tickers: string[]; // this array is to store the tickers weve bought from to have the data, probably a better way to handle it ngl 9/18, HASHMAPS!!
-    public stocks: Map<string, Stock>;
+    _profitLoss: number;
+    public _stocks: Map<string, Stock>;
 
-    // TODO bought at date
-
+    // TODO bought at date (maybe)
     constructor(id: string, balance: number) {
         this._id = id;
         this._balance = balance
-        this.profitLoss = 0;
-        this.tickers = [];
-        this.stocks = new Map<string, Stock>;
-        // make ticker, quantity hashmap??? - will make a stock class to manage it all 
+        this._profitLoss = 0;
+        this._stocks = new Map<string, Stock>;
     }
+    //quanity = 1 by default somehow
+    public async buyStock(ticker: string, quantity: number = 1 ): Promise<void>{
+        if(quantity <= 0){
+            console.log("You cant buy 0 or negative stock")
+            return;
+        }
+        // v  might remove this but it works 
+        const { price } = await getCurrentPrice(ticker); //price is from the quote json thingy this method returns
+        const totalValue = price * quantity;
+
+        if(totalValue > this._balance){ 
+            console.log("You cant afford it");
+
+        } else if (this._stocks.has(ticker)){ //if stock is already in users account add to it 
+            
+            this._stocks.get(ticker)?.addToInitialTotalValue(totalValue);// ? is to see if it exists even tho i did the check, maybe can make the code better later
+            
+        } else { //buy and set the stock to the hashmap
+            const stock = await Stock.create(ticker, quantity);            
+            this.balance -= totalValue;
+            this._stocks.set(ticker, stock); // sets hashmap with stock ("AAPL", aapl object)
+        }
+    }
+
+    public async sellStock(ticker: string, quantity: number): Promise<void> {
+        //TODO check if i even have the stock in stock
+        //TODO sell all or sell some and keep hashmap in check
+        //TODO if sell some take away from profit
+        // check if quanity matches
+        const { price } = await getCurrentPrice(ticker);
+        const tickerIWannaSell = price * quantity;
+        this._balance += tickerIWannaSell;
+
+        // Number tickerIWannaSell = await getCurrentPrice(ticker) * quanity;
+        // this.balance += tickerIWannaSell;
+    }
+
+    public checkTotalProfit(): number{
+        return 0;
+    }
+
+    // should make a thing where i check ALL profit and indiviual stock profit
+    public checkStockProfit(ticker: string): number {
+        const initValue = this._stocks.get(ticker)?.initialTotalValue;
+        const grossValue = this._stocks.get(ticker)?.currentGrossValue;
+        this._stocks.get(ticker); //left off here FLKDSHKJDSHFKLJDSHFHKJ still needs work
+
+        if (!initValue || !grossValue) {
+            console.log("No records for that ticker");
+            return 0;
+        }
+
+        // maybe need 64-bit: (TypeScript numbers are IEEE-754 doubles)
+        const profitLossPercentage = grossValue / initValue - 1.0;
+        return profitLossPercentage;
+    }   
 
     public get balance(): number {
         return this._balance;
@@ -41,65 +93,6 @@ export class Session {
     public get id(): string {
         return this._id;
     }
-
-    //quanity = 1 by default somehow
-    public async buyStock(ticker: string, quantity: number = 1 ): Promise<void>{
-        if(quantity <= 0){
-            console.log("You cant buy 0 or negative stock")
-            return;
-        }
-        // v  might remove this but it works 
-        const { price } = await getCurrentPrice(ticker); //price is from the quote json thingy this method returns
-        const totalValue = price * quantity;
-
-        if(totalValue > this._balance){ 
-            console.log("You cant afford it");
-
-        } else if (this.stocks.has(ticker)){ //if stock is already in users account add to it 
-            
-            this.stocks.get(ticker)?.addToInitialTotalValue(totalValue);// ? is to see if it exists even tho i did the check, maybe can make the code better later
-            
-        } else { //buy and set the stock to the hashmap
-            const stock = await Stock.create(ticker, quantity);            
-            this.balance -= totalValue;
-            this.stocks.set(ticker, stock); // sets hashmap with stock ("AAPL", aapl object)
-        }
-    }
-
-    public async sellStock(ticker: string, quantity: number): Promise<void> {
-        //TODO check if i even have the stock in stock
-        //TODO sell all or sell some and keep hashmap in check
-        //TODO if sell some take away from profit
-        // check if quanity matches
-        const { price } = await getCurrentPrice(ticker);
-        const tickerIWannaSell = price * quantity;
-        this._balance += tickerIWannaSell;
-
-        // Number tickerIWannaSell = await getCurrentPrice(ticker) * quanity;
-        // this.balance += tickerIWannaSell;
-    }
-
-    public updateStockPrice(){
-        //just go thru each ticker you have and store current price from the api on to the tickerGrossValue hashMap
-        // now that i think about it i should just make a stock class that holds all the relevant data...
-        // line 61 problem with making sure the grossPorfit is correct
-    }
-
-    public checkProfit(ticker: string): number {
-        const initValue = this.initialPurchases.get(ticker);
-        const grossValue = this.tickerGrossValue.get(ticker);
-
-        this.stocks.get(ticker)
-
-        if (!initValue || !grossValue) {
-        console.log("No records for that ticker");
-        return 0;
-        }
-
-        // maybe need 64-bit: (TypeScript numbers are IEEE-754 doubles)
-        const profitLossPercentage = grossValue / initValue - 1.0;
-        return profitLossPercentage;
-    }   
 }
 
 // console.log("Hello")

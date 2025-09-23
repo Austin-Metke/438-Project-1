@@ -60,7 +60,12 @@ export class Stock {
         return this._initialTotalValue;
     }
 
-    public addInitialTotalValue(newStock:number){
+    public get currentGrossValue():number{
+        this.refresh();
+        return this._currentGrossValue;
+    }
+
+    public addToInitialTotalValue(newStock:number){
         this._initialTotalValue += newStock;
     }
 
