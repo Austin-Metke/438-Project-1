@@ -31,35 +31,66 @@ export class Session {
             console.log("You cant afford it");
 
         } else if (this._stocks.has(ticker)){ //if stock is already in users account add to it 
-            
-            this._stocks.get(ticker)?.addToInitialTotalValue(totalValue);// ? is to see if it exists even tho i did the check, maybe can make the code better later
+            const stock = this._stocks.get(ticker)!;
+            stock.addToInitialTotalValue(totalValue);
+            stock.addQuantity(quantity);
             
         } else { //buy and set the stock to the hashmap
-            const stock = await Stock.create(ticker, quantity);            
-            this.balance -= totalValue;
+            const stock = await Stock.create(ticker, quantity);   
+            stock.addToInitialTotalValue(totalValue)         
             this._stocks.set(ticker, stock); // sets hashmap with stock ("AAPL", aapl object)
         }
+        this._balance -= totalValue;
+        console.log(`Bought ${quantity} shares of ${ticker} at $${price} each.`);
     }
 
     public async sellStock(ticker: string, quantity: number): Promise<void> {
-        //TODO check if i even have the stock in stock
-        //TODO sell all or sell some and keep hashmap in check
-        //TODO if sell some take away from profit
-        // check if quanity matches
+        if (!this._stocks.has(ticker)) {
+            console.log(`You don't own any shares of ${ticker}`);
+            return;
+        }
+
+        const stock = this._stocks.get(ticker)!;
+
+        if (quantity > stock.getQuantity()) {
+            console.log(`You only have ${stock.getQuantity()} shares of ${ticker}`);
+            return;
+        }
+
         const { price } = await getCurrentPrice(ticker);
         const tickerIWannaSell = price * quantity;
         this._balance += tickerIWannaSell;
+
+        stock.subQuantity(quantity);
+
+        if (stock.getQuantity() === 0) {
+            this._stocks.delete(ticker);
+        }
+
+        console.log(`Sold ${quantity} shares of ${ticker} at $${price} each.`);
 
         // Number tickerIWannaSell = await getCurrentPrice(ticker) * quanity;
         // this.balance += tickerIWannaSell;
     }
 
     public checkTotalProfit(): number{
-        return 0;
+        let totalProfit = 0;
+        for (const [ticker, stock] of this._stocks) {
+            const { currentGrossValue, initialTotalValue } = stock;
+            if (currentGrossValue && initialTotalValue) {
+                totalProfit += currentGrossValue - initialTotalValue;
+            }
+        }
+        return totalProfit;
     }
 
     // should make a thing where i check ALL profit and indiviual stock profit
     public checkStockProfit(ticker: string): number {
+        if (!this._stocks.has(ticker)) {
+            console.log("No records for that ticker");
+            return 0;
+        }
+
         const initValue = this._stocks.get(ticker)?.initialTotalValue;
         const grossValue = this._stocks.get(ticker)?.currentGrossValue;
         this._stocks.get(ticker); //left off here FLKDSHKJDSHFKLJDSHFHKJ still needs work
@@ -95,24 +126,24 @@ export class Session {
     }
 }
 
-// console.log("Hello")
-// const session1 = new Session("acc-001", 1000);
-// console.log("ID:", session1.id);              // acc-001
-// console.log("Balance:", session1.balance);    // 1000
-// console.log("Profit/Loss:", session1.profitLoss); // 0
-//
-// // --- Test setters ---
-// session1.id = "acc-002";   // calls the set id()
-// console.log("New ID:", session1.id);  // acc-002
-//
-// session1.balance = 2000;   // calls the set balance()
-// console.log("New Balance:", session1.balance); // 2000
-//
-// // --- Test addToBalance() ---
-// session1.addToBalance(500);
-// console.log("Balance after add:", session1.balance); // 2500
-//
-// // --- Test ticker array ---
-// session1.ticker.push("AAPL");
-// session1.ticker.push("TSLA");
-// console.log("Tickers:", session1.ticker);
+async function testSession() {
+    const session = new Session("user123", 1000);
+    console.log("Initial balance:", session.balance);
+
+    await session.buyStock("AAPL", 2);
+    await session.buyStock("TSLA", 1);
+
+    console.log("Balance after buying:", session.balance);
+    console.log("Current stocks:", session._stocks);
+
+    const profitAAPL = await session.checkStockProfit("AAPL");
+    console.log("AAPL profit %:", (profitAAPL * 100).toFixed(2));
+
+    await session.sellStock("AAPL", 1);
+    console.log("Balance after selling 1 AAPL:", session.balance);
+
+    const totalProfit = session.checkTotalProfit();
+    console.log("Total profit across all stocks:", totalProfit);
+}
+
+testSession();

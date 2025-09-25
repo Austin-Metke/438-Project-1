@@ -77,4 +77,8 @@ export class Stock {
         this._quantity += newPurchase;
     }
 
+    public subQuantity(newSell:number){
+        this._quantity += newSell;
+    }
+
 }
