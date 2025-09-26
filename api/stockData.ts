@@ -1,40 +1,46 @@
 import { config } from "./config";
-import { useState, useEffect } from "react";
 
 let requestOptions = {
   method: "GET",
 };
 
+const dateToString = (date: Date) => {
+  return `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+};
+
 export const getStockHistory = async (
   ticker: string,
-  startDate: string,
-  endDate: string,
-  interval: string = "minute"
+  startDate: Date = new Date(),
+  endDate: Date = new Date(),
+  interval: string = "hour"
 ) => {
-  interval = interval.toLowerCase();
   ticker = ticker.toUpperCase();
 
-  const dateRegex = /^\d{4}\-\d{2}\-\d{2}$/; // regex for yyyy-mm-dd
-  if (!(dateRegex.test(startDate) && dateRegex.test(endDate))) {
-    throw new Error("Incorrect date format");
+  startDate.setDate(startDate.getDate() - 10);
+
+  const startString = dateToString(startDate);
+  const endString = dateToString(endDate);
+
+  // const dateRegex = /^\d{4}\-\d{2}\-\d{2}$/; // regex for yyyy-mm-dd
+  // if (!(dateRegex.test(startDate) && dateRegex.test(endDate))) {
+  //   throw new Error("Incorrect date format");
+  // }
+
+  if (endDate < startDate) {
+    throw new Error("End date error!");
   }
 
-  const startObject: Date = new Date(startDate);
-  const endObject: Date = new Date(endDate);
-
-  if (endObject < startObject) {
-    throw new Error("End date cannot be earlier than start date");
-  }
-
-  if (!["hour", "minute"].includes(interval)) {
-    throw new Error("Invalid interval type. Must be 'hour' or 'minute'");
-  }
+  // if (!["hour", "minute"].includes(interval)) {
+  //   throw new Error("Invalid interval type. Must be 'hour' or 'minute'");
+  // }
 
   const params = new URLSearchParams({
-    api_token: config.stockDataApi,
     symbols: ticker,
-    date_from: startDate, // Format: YYYY-MM-DD
-    date_to: endDate, // Format: YYYY-MM-DD
+    api_token: config.stockDataApi,
+    date_from: startString, // Format: YYYY-MM-DD
+    date_to: endString, // Format: YYYY-MM-DD
     sort: "asc", // Show oldest to newest for progression
     interval: interval,
   });
