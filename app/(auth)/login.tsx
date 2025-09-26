@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 // import {createStaticNavigation} from '@react-navigation/native';
 // import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import { login } from '@/api/auth';
+import { login } from '../../api/auth';
 import { Octicons } from '@expo/vector-icons';
 import { Link, router } from "expo-router";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';

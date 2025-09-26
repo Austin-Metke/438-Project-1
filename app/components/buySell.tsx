@@ -1,5 +1,3 @@
-import { getStockHistory } from "@/api/stockData";
-import { getToken } from "@/api/tokenStorage";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -10,10 +8,13 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { getStockHistory } from "../../api/stockData";
+import { getToken } from "../../api/tokenStorage";
 import Menu from "../components/Menu";
 
 export default function BuySell() {
-  const { symbol } = useLocalSearchParams();
+  const { symbol } = useLocalSearchParams<{ symbol: string }>();
+  console.log(symbol + "** ")
   const [price, setPrice] = useState<number | null>(null);
   console.log("Symbol from URL:", symbol); //ok so we are actually get this ok
 
@@ -31,9 +32,9 @@ export default function BuySell() {
       }
 
       try {
-        const today = new Date().toISOString().split("T")[0];
-
-        const result = await getStockHistory(symbol, today, today, "minute");
+        const end = new Date();                     // now
+        const start = new Date(end.getTime() - 24 * 60 * 60 * 1000); // 24h ago
+        const result = await getStockHistory(symbol, start, end, "minute");
         console.log("API result:", JSON.stringify(result, null, 2));
 
         if (result?.data?.length > 0) {
@@ -58,12 +59,6 @@ export default function BuySell() {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Ticker: {symbol ?? "Unknown"}</Text>
-      <Text style={styles.price}>
-        {price !== null
-          ? `Current Price: $${price.toFixed(2)}`
-          : "Loading price..."}
-      </Text>
-
       <View style={styles.dropdownContainer}>
         <Menu />
       </View>
