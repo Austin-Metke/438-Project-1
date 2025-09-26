@@ -1,8 +1,9 @@
-import { getStockHistory, searchForTick } from "@/api/stockData";
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { SearchBar } from "react-native-elements";
+import { config } from "../../api/config";
+import { getStockHistory } from "../../api/stockData";
 
 export default function Index() {
   const [search, setSearch] = useState("");
@@ -13,6 +14,9 @@ export default function Index() {
 
   // Update search value each time it is updated
   const updateSearch = (searchText: string) => {
+
+    const token = config.stockDataApi;
+    console.log(token + "***");
     setSearch(searchText);
     setError(""); // Clear error when user types
     setStockData(null); // Clear previous stock data
@@ -60,6 +64,7 @@ export default function Index() {
     <View style={styles.container}>
       <Text style={styles.text}>Stock Search</Text>
       <SearchBar
+        platform="default"
         placeholder="Enter stock symbol (e.g., AAPL)"
         onChangeText={updateSearch}
         value={search}

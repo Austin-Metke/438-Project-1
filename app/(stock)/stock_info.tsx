@@ -1,23 +1,24 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { StockGraph } from "@/api/stockGraph";
+import { Button } from "react-native-elements";
+import { StockGraph } from "../../api/stockGraph";
 
 interface StockData {
-  data?: Array<{
+  data?: {
     symbol?: string;
     name?: string;
     price?: number;
     change?: number;
     exchange?: string;
     currency?: string;
-  }>;
+  }[];
 }
 
 export default function StockInfoScreen() {
   const params = useLocalSearchParams();
   const router = useRouter();
-  const [stockData, setStockData] = useState<StockData | null>(null); // Add proper typing
+  const [stockData, setStockData] = useState<StockData | null>(null); 
 
   useEffect(() => {
     if (params.stockData) {
@@ -34,19 +35,17 @@ export default function StockInfoScreen() {
     if (!stockData || !stockData.data || stockData.data.length === 0) {
       return <Text style={styles.noDataText}>No stock data available</Text>;
 
-      return StockGraph;
     }
 
     const stock = stockData.data[0];
-    // Get first stock result
 
     return (
       <View style={styles.stockCard}>
-        <Text style={styles.stockSymbol}>{stock.ticker}</Text>
+        <Text style={styles.stockSymbol}>{stock.symbol}</Text>
 
-        {/* Adds stock information onto the screen */}
+        {}
         {stock.data && (
-          <Text style={styles.stockPrice}>Open: ${stock.data.open}</Text>
+          <Text style={styles.stockPrice}>Open: ${stock.open}</Text>
         )}
 
         {stock.change && (
@@ -77,8 +76,23 @@ export default function StockInfoScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.symbol}>Stock Data & Graph</Text>
+        <Text style={styles.symbol}>Stock Data & Graph</Text>  
+
       </View>
+      <View style={styles.buttonContainer}>
+        <Button
+          title="trade!"
+          buttonStyle={styles.longButton}
+          titleStyle={styles.buttonText}
+          onPress={() =>
+            router.push({
+              pathname: "../components/buySell",   // or wherever your file lives
+              params: { symbol: params.symbol as string },
+            })
+          }
+        />
+      </View>
+
 
       <View style={styles.content}>
         {renderStockInfo()}
@@ -86,13 +100,7 @@ export default function StockInfoScreen() {
           <StockGraph symbol={params.symbol as string} data={stockData?.data} />
         )}
 
-        {/* Debug section - remove in production
-        <View style={styles.debugSection}>
-          <Text style={styles.debugTitle}>Raw Data (Debug):</Text>
-          <Text style={styles.debugText}>
-            {stockData ? JSON.stringify(stockData, null, 2) : "No data"}
-          </Text>
-        </View> */}
+        {}
       </View>
     </ScrollView>
   );
@@ -201,5 +209,21 @@ const styles = StyleSheet.create({
     color: "#E2E8F0",
     fontSize: 10,
     fontFamily: "monospace",
+  },
+  buttonContainer: {
+    marginHorizontal: 20,
+    marginVertical: 10,
+  },
+  
+  longButton: {
+    backgroundColor: "#007AFF",
+    borderRadius: 12,
+    height: 60,          
+    width: "100%",    
+  },
+  
+  buttonText: {
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
