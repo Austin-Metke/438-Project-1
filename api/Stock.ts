@@ -1,6 +1,6 @@
 // Senen Bagos 
 // This class handles indivual stock in a user's session 
-import { getCurrentPrice } from "./stockPrice";
+import { getCurrentPrice } from "./stockPrice.ts";
 
 export class Stock {
     private _ticker: string; // ticker like AAPL

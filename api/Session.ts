@@ -1,8 +1,8 @@
 // Senen Bagos
 // This Class handles making new buy/sell accounts managing your currency, profit/loss dividends xyz
 // A user can have multiple to test out different trading tactics
-import { Stock } from "./Stock";
-import { getCurrentPrice } from "./stockPrice";
+import { Stock } from "./Stock.ts";
+import { getCurrentPrice } from "./stockPrice.ts";
 
 export class Session {
     private _id: string;
