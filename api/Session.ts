@@ -1,6 +1,7 @@
 // Senen Bagos
 // This Class handles making new buy/sell accounts managing your currency, profit/loss dividends xyz
 // A user can have multiple to test out different trading tactics
+// Run thie file with: npx ts-node --esm api/Session.ts
 import { Stock } from "./Stock.ts";
 import { getCurrentPrice } from "./stockPrice.ts";
 
