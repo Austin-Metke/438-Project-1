@@ -16,8 +16,7 @@ export class Stock {
         this._currentGrossValue = initialTotalValue;
     }
 
-    public static async create(ticker: string, quantity: number): Promise<Stock> {
-        const price = await Stock.getCurrentPriceHelper(ticker);
+    public static async create(ticker: string, quantity: number, price:number): Promise<Stock> {
         const initialTotalValue = price * quantity;
         return new Stock(ticker, quantity, initialTotalValue);
     }
@@ -30,6 +29,9 @@ export class Stock {
     public async refresh(): Promise<void> {
         const price = await Stock.getCurrentPriceHelper(this._ticker);
         this._currentGrossValue = price * this._quantity;
+        console.log( this._currentGrossValue)
+        console.log( this._quantity)
+
     }
 
     public get initialPricePerShare(): number {
@@ -58,6 +60,10 @@ export class Stock {
 
     public get initialTotalValue():number{
         return this._initialTotalValue;
+    }
+
+    public updateCurrentGrossValue(newStock:number){
+        this._currentGrossValue += newStock;
     }
 
     public get currentGrossValue():number{

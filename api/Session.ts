@@ -18,7 +18,7 @@ export class Session {
         this._stocks = new Map<string, Stock>;
     }
     //quanity = 1 by default somehow
-    public async buyStock(ticker: string, quantity: number = 1 ): Promise<void>{
+    public async buyStock(ticker: string, quantity: number): Promise<void>{
         if(quantity <= 0){
             console.log("You cant buy 0 or negative stock")
             return;
@@ -29,15 +29,16 @@ export class Session {
 
         if(totalValue > this._balance){ 
             console.log("You cant afford it");
+            return;
 
         } else if (this._stocks.has(ticker)){ //if stock is already in users account add to it 
             const stock = this._stocks.get(ticker)!;
             stock.addToInitialTotalValue(totalValue);
             stock.addQuantity(quantity);
+            stock.updateCurrentGrossValue(totalValue);// id rather update it but ran out of API calls to test 
             
         } else { //buy and set the stock to the hashmap
-            const stock = await Stock.create(ticker, quantity);   
-            stock.addToInitialTotalValue(totalValue)         
+            const stock = await Stock.create(ticker, quantity, price);   
             this._stocks.set(ticker, stock); // sets hashmap with stock ("AAPL", aapl object)
         }
         this._balance -= totalValue;
@@ -139,11 +140,29 @@ async function testSession() {
     const profitAAPL = await session.checkStockProfit("AAPL");
     console.log("AAPL profit %:", (profitAAPL * 100).toFixed(2));
 
+    session.addToBalance(5000);
+    console.log("New balance:", session.balance);
+
+    await session.buyStock("AAPL", 1);
+    console.log("Balance after buying:", session.balance);
+    console.log("Current stocks:", session._stocks);
+
     await session.sellStock("AAPL", 1);
     console.log("Balance after selling 1 AAPL:", session.balance);
 
     const totalProfit = session.checkTotalProfit();
     console.log("Total profit across all stocks:", totalProfit);
+
+    console.log("AAPL profit %:", (profitAAPL * 100).toFixed(2));
+    const aaplStock = session._stocks.get("AAPL");
+
+    if (aaplStock) {
+        console.log("Current Gross value Test: "+ aaplStock.currentGrossValue);
+    } else {
+        console.log("AAPL stock not found in session.");
+    }
+
+
 }
 
 testSession();
