@@ -1,6 +1,6 @@
 // Senen Bagos 
 // This class handles indivual stock in a user's session 
-import { getCurrentPrice } from "./stockPrice";
+import { getCurrentPrice } from "./stockPrice.ts";
 
 export class Stock {
     private _ticker: string; // ticker like AAPL
@@ -16,8 +16,7 @@ export class Stock {
         this._currentGrossValue = initialTotalValue;
     }
 
-    public static async create(ticker: string, quantity: number): Promise<Stock> {
-        const price = await Stock.getCurrentPriceHelper(ticker);
+    public static async create(ticker: string, quantity: number, price:number): Promise<Stock> {
         const initialTotalValue = price * quantity;
         return new Stock(ticker, quantity, initialTotalValue);
     }
@@ -30,6 +29,9 @@ export class Stock {
     public async refresh(): Promise<void> {
         const price = await Stock.getCurrentPriceHelper(this._ticker);
         this._currentGrossValue = price * this._quantity;
+        console.log( this._currentGrossValue)
+        console.log( this._quantity)
+
     }
 
     public get initialPricePerShare(): number {
@@ -60,7 +62,16 @@ export class Stock {
         return this._initialTotalValue;
     }
 
-    public addInitialTotalValue(newStock:number){
+    public updateCurrentGrossValue(newStock:number){
+        this._currentGrossValue += newStock;
+    }
+
+    public get currentGrossValue():number{
+        this.refresh();
+        return this._currentGrossValue;
+    }
+
+    public addToInitialTotalValue(newStock:number){
         this._initialTotalValue += newStock;
     }
 
@@ -70,6 +81,10 @@ export class Stock {
 
     public addQuantity(newPurchase:number){
         this._quantity += newPurchase;
+    }
+
+    public subQuantity(newSell:number){
+        this._quantity += newSell;
     }
 
 }
