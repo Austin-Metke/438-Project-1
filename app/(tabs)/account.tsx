@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from "react-native";
-import { deleteToken, getToken } from "@/api/tokenStorage";
 import { router } from "expo-router";
-import { getProfile, UserProfile} from "@/api/auth";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { getProfile, UserProfile } from "../../api/auth";
+import { deleteToken, getToken } from "../../api/tokenStorage";
 
 
 
@@ -92,7 +92,6 @@ export default function AccountScreen() {
           </View>
         </View>
 
-        {/* Account Actions */}
         <View style={styles.actionsContainer}>
           <TouchableOpacity style={styles.actionButton} onPress={handleEditProfile}>
             <Text style={styles.actionText}>Edit Profile</Text>

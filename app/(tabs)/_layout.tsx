@@ -58,16 +58,6 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="buySell"
-        options={{
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons name="add-circle-outline" size={24} color={color} />
-          ),
-        }}
-      />
     </Tabs>
-    
-    
   );
 }
